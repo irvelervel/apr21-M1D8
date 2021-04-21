@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Accessing Elements in the DOM</title>
+
+    <style>
+      html {
+        font-family: sans-serif;
+        color: #333;
+      }
+      body {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+      div div,
+      div article {
+        padding: 10px;
+        margin: 5px;
+        border: 1px solid #dedede;
+      }
+
+      /* querySelector and querySelectorAll work with selectors like these: */
+
+      /* #demo {
+        background-color: green;
+      } */
+
+      /* #demo div {
+        color: red;
+      } */
+
+      .new-class {
+        color: yellow;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Accessing Elements in the DOM</h1>
+
+    <input onkeydown="inputFunction(event)" />
+
+    <div id="demo">
+      <h2 class="whatever">ID (#demo)</h2>
+      <div>Access me by ID</div>
+    </div>
+
+    <div>
+      <h2>Class (.demo)</h2>
+      <div class="demo">Access me by class (1)</div>
+      <div class="demo">Access me by class (2)</div>
+    </div>
+
+    <div>
+      <h2>Tag (article)</h2>
+      <div id="article-container">
+        <article>Access me by tag (1)</article>
+        <article>Access me by tag (2)</article>
+      </div>
+    </div>
+
+    <div id="demo-query">
+      <h2>Query Selector</h2>
+      <div>Access me by query</div>
+    </div>
+
+    <div>
+      <h2>Query Selector All</h2>
+      <div class="demo-query-all">Access me by query all (1)</div>
+      <div class="demo-query-all">Access me by query all (2)</div>
+    </div>
+
+    <h2>A more complex query</h2>
+    <div id="more-complex">
+      <ul>
+        <li>First element inside a list</li>
+        <li>Second element inside a list</li>
+        <li>Third element inside a list</li>
+      </ul>
+    </div>
+
+    <table>
+      <tr>
+        <td></td>
+      </tr>
+    </table>
+    <script>
+      console.log("hello!!!");
+
+      let firstDiv = document.getElementById("demo");
+      // it will return you AT MOST one element
+
+      let twoDivs = document.getElementsByClassName("different-demo");
+      // it will ALWAYS return you AN ARRAY
+
+      let allTheH2s = document.getElementsByTagName("h2");
+      // it will ALWAYS return you AN ARRAY
+
+      //   console.log(firstDiv);
+      //   console.log(twoDivs);
+      //   console.log(allTheH2s[2]);
+
+      let elementSelectedByCssQuery = document.querySelector(`#demo h2`);
+      // it will return you AT MOST one element
+      // we're selecting the <h2> child of the div with id="demo"
+
+      console.log(elementSelectedByCssQuery);
+
+      // --- you can expect every object we select to have a structure similar to this ---
+
+      //   elementSelectedByCssQuery = {
+      //       innerText: 'ID (#demo)',
+      //       classList: {
+      //          add: function(){
+      //            ...
+      //          },
+      //          remove: function(){
+      //            ...
+      //          }
+      //        },
+      //        style: {
+      //            color: 'black',
+      //            fontSize: '12px',
+      //            ...
+      //        },
+      //        ...and many other properties/methods
+      //   }
+
+      // if you already have the object to manipulate, just work with the properties/methods it offers:
+      elementSelectedByCssQuery.innerText = `Alina`;
+      elementSelectedByCssQuery.style.backgroundColor = "black";
+
+      // a function for programmatically add a class and change the font size of elementSelectedByCssQuery
+      const changeClass = function () {
+        elementSelectedByCssQuery.classList.add("new-class");
+        elementSelectedByCssQuery.style.fontSize = "50px";
+      };
+      // we need to invoke it for making its code executed. we can call it here:
+      //   changeClass()
+      // or we can call it into the browser console, writing changeClass() there and pressing enter
+
+      let allTheHeadings = document.querySelectorAll("h2");
+      // this will assign to allTheHeadings an array with all the <h2> elements found in the page
+      // if we have an array of elements, and we want to change a property in ALL of them,
+      // just cycle it with a for loop! :)
+
+      for (let i = 0; i < allTheHeadings.length; i++) {
+        allTheHeadings[i].style.color = "green";
+        // we're targeting one by one all the <h2> in the page:
+        // allTheHeadings[0] -> first <h2>
+        // allTheHeadings[1] -> second <h2>
+        // ...and so on
+      }
+
+      let demoDiv = document.getElementById("demo");
+      console.log(demoDiv);
+
+      let classDivs = document.getElementsByClassName("whatever");
+      // classDivs will ALWAYS be an array!
+      console.log(classDivs);
+
+      let h2s = document.getElementsByTagName("h2");
+      // h2s will ALWAYS be an array!
+
+      console.log(document.querySelectorAll("h2")[2]);
+
+      const changeThirdElement = function () {
+        let thirdLi = document.querySelectorAll("#more-complex li")[2];
+        thirdLi.innerText = "Change it!";
+        thirdLi.style.color = "violet";
+        thirdLi.style.marginTop = "30px";
+      };
+
+      // traverse an array of elements
+
+      const changeAllListItems = function () {
+        let allListItems = document.querySelectorAll("#more-complex li");
+        // the scope of allListItems is local
+        // allListItems now is an array
+        for (let i = 0; i < allListItems.length; i++) {
+          allListItems[i].style.color = "violet";
+          allListItems[i].innerText = "hello strive " + i;
+
+          // allListItems[i].classList.add("new-class");
+          // allListItems[i].classList.remove("new-class");
+
+          allListItems[i].classList.toggle("new-class");
+          allListItems[i].classList.toggle("new-class");
+
+          allListItems[i].setAttribute("id", "maksym" + i);
+        }
+      };
+
+      const deleteLastListItem = function () {
+        let allListItems = document.querySelectorAll("#more-complex li");
+        allListItems[allListItems.length - 1].remove(); // is the same in this case of doing allListItems[2]
+      };
+
+      const deleteAllListItems = function () {
+        let allListItems = document.querySelectorAll("#more-complex li");
+        for (let i = 0; i < allListItems.length; i++) {
+          allListItems[i].remove(); // doing the same for all the elements in the array
+        }
+      };
+
+      const deleteFirstAndLast = function () {
+        let allListItems = document.querySelectorAll("#more-complex li");
+        allListItems[0].remove();
+        allListItems[allListItems.length - 1].remove();
+      };
+
+      const addNewListItem = function () {
+        // create an empty list item
+        // add the text content to it
+        // select the parent
+        // append our element to it
+
+        // create an empty list item
+        let newListItem = document.createElement("li");
+        // newListItem is <li></li>
+
+        // add the text content to it
+        newListItem.innerText = "Fourth element inside a list";
+        // newListItem is <li>Fourth element inside a list</li>
+        newListItem.style.color = "red";
+        // newListItem is <li style="color: red">Fourth element inside a list</li>
+
+        // select the parent
+        let parentUl = document.querySelector("#more-complex ul");
+
+        // append our element to it
+        parentUl.appendChild(newListItem);
+
+        // this will insert my node before the second element
+        // parentUl.children is an array holding all the children elements!
+        // parentUl.insertBefore(newListItem, parentUl.children[1]);
+      };
+
+      // ------------ Q&A 21/04 ------------
+
+      // different ways for selecting the div with id of 'demo'
+      let x1 = document.querySelector("#demo"); // slightly slower
+      let x2 = document.getElementById("demo"); // slightly faster
+
+      let allTheDemoClass1 = document.getElementsByClassName("demo"); // slightly faster
+      let allTheDemoClass2 = document.querySelectorAll(".demo"); // slightly slower
+
+      // a loop is a structure that will allow you to REPEAT a portion of code many times
+      // for loop declaration, 3 steps:
+      // 1) initialize the counter, usually at 0
+      // 2) set the stopping condition for the loop
+      // for repeating an instruction 5 times, starting from 0, we need to stop at 4
+      // 3)
+      for (let x = 0; x < 5; x++) {
+        // 5 times
+        // console.log("I'm in the loop!", x);
+        // in the last cycle, x is equal to 4
+        // when x reaches 5, it's going to exit
+      }
+
+      let arrayOfStudents = ["Maksym", "Alina", "Mykola", "Rabia", "Tiago"];
+      // arrays' indexes start from 0
+
+      // console.log(arrayOfStudents[0]); // Maksym
+      // console.log(arrayOfStudents[1]); // Alina
+      // console.log(arrayOfStudents[2]); // Mykola
+      // console.log(arrayOfStudents[3]); // Rabia
+      // console.log(arrayOfStudents[4]); // Tiago
+
+      for (let i = 0; i < arrayOfStudents.length; i++) {
+        // arrayOfStudents[i] will be a different student every time
+        if (arrayOfStudents[i] === "Alina") {
+          // console.log(arrayOfStudents[i]);
+        }
+        // i should never exeed the length of the array
+        // console.log(arrayOfStudent[50])
+      }
+
+      let vardan = {
+        name: "Vardan",
+        skills: ["chef", "carpenter"],
+      };
+
+      // console.log(vardan.skills[0]); // vardan is an object, but vardan.skills is an array!
+
+      // let's select the only <ul> in the page
+      let ul1 = (document.querySelector(
+        "#more-complex ul"
+      ).children[1].style.backgroundColor = "red");
+      // console.log(ul1);
+
+      let li = document.querySelectorAll("li")[0].parentElement;
+      console.log(li); // now this is really the <ul> and not the <li>
+
+      let heading = document.getElementsByTagName("h2")[3]; // the fourth one
+      // heading is now the fourth h2 in the page
+      // heading.parentElement is the div with id="demo-query"
+      let headingParent = heading.parentElement; // this now is the div with id="demo-query"
+      // console.log(headingParent.innerText);
+      // innerText is the TEXT CONTENT of the element (useful i.e. for heading)
+      headingParent.innerHTML = "<h1>JUST CHANGED</h1>";
+      // innerHTML is returning you the whole HTML CONTENT of the element
+
+      // let div = document.getElementById("more-complex");
+      // div.innerHTML = "<ul><li>ERASED EVERYTHING ELSE</li></ul>";
+
+      let myUl = document.getElementsByTagName("ul")[0];
+      // console.log(myUl.innerHTML);
+      myUl.innerHTML = myUl.innerHTML + "<li>NEW ONE WITH innerHTML</li>";
+      // QUICK & DIRTY
+      // myUl.innerHTML += "<li>NEW ONE</li>"; // SAME THING
+
+      // let's append one with appendChild method
+
+      let newLi = document.createElement("li");
+      // newLi now is <li></li>
+
+      newLi.innerText = "NEW ONE WITH appendChild";
+      // newLi now is <li>NEW ONE WITH appendChild</li>
+
+      // finally let's append the li to the ul
+      myUl.appendChild(newLi);
+      // MORE STRUCTURED WAY
+
+      // events are something we can GRAB ONTO for triggering portions of code in specific moments
+      // mouse clicks
+      // page scroll
+      // keys stroked
+
+      const buttonFunction = function (event) {
+        // this is a function declaration
+        console.log(event);
+      };
+
+      const inputFunction = function (event) {
+        // I'm entering the inputFunction everytime a key is stroked into the input
+        // because I've attached this function directly into the <input> tag in html
+        // look at line 45
+        if (event.keyCode === 13) {
+          // from the event I can realize which key was pressed
+          // 13 === enter key
+          // I'm entering here just if ENTER key is pressed
+          let inputField = document.getElementsByTagName("input")[0];
+          // inputField now is a reference to the input tag
+          if (inputField.value === "button") {
+            // I'm entering this if JUST if what I wrote into the input is 'button'
+            // and pressed the enter key
+            let b = document.createElement("button");
+            // created an empty button, like <button></button>
+            b.innerText = "NEW BUTTON";
+            // now b is <button>NEW BUTTON</button>
+            b.onclick = buttonFunction;
+            // because the button was not present in HTML initially,
+            // I need to attach its onclick event listener via code!
+            // another way for doing the same thing:
+            // b.addEventListener('click', buttonFunction)
+
+            let body = document.getElementsByTagName("body")[0];
+            // this gets a reference to the body tag
+
+            body.insertBefore(b, inputField);
+            // I inserted my button in the body before the input field
+          }
+        }
+      };
+
+      let button = document.getElementsByTagName("button")[0];
+      // button.onclick = buttonFunction;
+      // // one way of attaching your onclick event listener to the button
+
+      // let's call our function!
+      // buttonFunction();
+
+      // we write function because we love to DRY
+    </script>
+    <!-- <script src="myCode.js"></script> -->
+    <!-- with this syntax you can embed external .js files to your html page -->
+  </body>
+</html>
