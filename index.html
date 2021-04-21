@@ -37,6 +37,7 @@
         color: yellow;
       }
     </style>
+    <!-- <link rel="stylesheet" type="text/css" href="styles.css" /> -->
   </head>
 
   <body>
@@ -353,11 +354,11 @@
             // created an empty button, like <button></button>
             b.innerText = "NEW BUTTON";
             // now b is <button>NEW BUTTON</button>
-            b.onclick = buttonFunction;
             // because the button was not present in HTML initially,
             // I need to attach its onclick event listener via code!
             // another way for doing the same thing:
             // b.addEventListener('click', buttonFunction)
+            b.onclick = buttonFunction;
 
             let body = document.getElementsByTagName("body")[0];
             // this gets a reference to the body tag

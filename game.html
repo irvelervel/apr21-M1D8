@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Math Game!</title>
+  </head>
+  <body>
+    <div id="main">
+      <div id="first-number"></div>
+      <div id="add">+</div>
+      <div id="second-number"></div>
+      <div id="equal">=</div>
+      <div>
+        <input type="number" id="guess" />
+      </div>
+      <div>
+        <button id="check-btn" onclick="check()">CHECK</button>
+      </div>
+    </div>
+    <div id="scores"></div>
+    <script>
+      const prepareGame = function () {
+        // let's generate two numbers for my two cells
+        let firstNumber = Math.floor(Math.random() * 10);
+        let secondNumber = Math.floor(Math.random() * 10);
+
+        // let's grab a reference to the cells from the page
+        let firstCell = document.getElementById("first-number");
+        let secondCell = document.getElementById("second-number");
+
+        // let's put our random numbers in the DOM
+        firstCell.innerText = firstNumber;
+        secondCell.innerText = secondNumber;
+
+        // finally, let's get a reference to the input field
+        let inputField = document.getElementById("guess");
+        // and let's empty every time the game reloads!
+        inputField.value = "";
+      };
+
+      const check = function () {
+        // let's grab a reference to the cells from the page
+        let firstCell = document.getElementById("first-number");
+        let secondCell = document.getElementById("second-number");
+
+        // let's grab the values we put on the page previously
+        let firstNumber = firstCell.innerText; // unfortunately these will always be strings!
+        let secondNumber = secondCell.innerText;
+
+        // parseInt converts a string into a integer
+        let total = parseInt(firstNumber) + parseInt(secondNumber);
+        // this is the right total! calculated by the computer
+
+        // let's get a reference to the input field
+        let inputField = document.getElementById("guess");
+        // let's retrieve my guessing, it's going to be the value of the field
+        let myGuessedNumber = inputField.value; // always a string
+
+        // let's create a variable holding a reference to the body tag
+        // this will be helpful later on for colorizing the background
+        // according to the result!
+        let body = document.querySelector("body");
+
+        // let's compare the right total (a number) with my guess converted to a number
+        if (total === parseInt(myGuessedNumber)) {
+          // if we are here, it means we're correct!
+          //   alert("CORRECT!");
+          body.style.backgroundColor = "green"; // let's make the body background green
+          addScore(true); // let's add a sunglass emoji
+          prepareGame(); // this will prepare our gameboard another time!
+        } else {
+          // if we are here, it means we're NOT correct
+          //   alert("INCORRECT! The right number was " + total);
+          body.style.backgroundColor = "red"; // let's make the body background red
+          addScore(false); // let's add a worried emoji
+          prepareGame(); // this will prepare our gameboard another time!
+        }
+      };
+
+      const addScore = function (result) {
+        // result will be true or false, depending
+        // on HOW we invoked the function (we invoked with true or false depending if
+        // we were winning or losing)
+
+        // let's grab a reference to the score section in the page
+        let scoreSection = document.getElementById("scores");
+
+        // let's create a new empty div
+        let score = document.createElement("div");
+        //   <div></div>
+
+        // now we need to inject into our empty div an emoji
+        // which one will depend by our parameter result
+        // if we passed true, it will be a sunglasses one
+        if (result === true) {
+          score.innerText = "😎";
+        } else {
+          // if we fall here, it means we invoked addScore with false as the parameter
+          score.innerText = "😫";
+        }
+        // now the emoji is set!
+        // I just need to append my score into the scores section
+        scoreSection.appendChild(score);
+      };
+
+      window.onload = function () {
+        // this portion of code is executed automatically by the browser
+        //   every time we refresh the page
+        console.log("loaded");
+        // let's call prepareGame so the board will be ready for us to play :)
+        prepareGame();
+      };
+    </script>
+  </body>
+</html>
